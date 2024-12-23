@@ -14,4 +14,5 @@ Before you start, make sure you have the following installed:
 1. Clone this repository to your local machine:
 
    ```bash
-   git clone https://github.com/yourusername/websocket-express-project.git
+   https://github.com/Hannyel0/Simple_chat.git
+   ```
