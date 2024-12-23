@@ -1,5 +1,5 @@
 const inputText = document.getElementById("inputT")
-
+const messagesContainer = document.getElementById('messages');
 const form = document.getElementById("form")
 
 
@@ -33,12 +33,16 @@ ws.onopen = () =>{
 
 
 ws.onmessage = (e)=>{
-    console.log(`Message from server: ${e.data}`)
+    const messages = e.data.split('\n')
+    messagesContainer.innerHTML = '';
 
-    const messagesContainer = document.getElementById('messages');
-    const messageElement = document.createElement('p');
-    messageElement.textContent = e.data;
-    messagesContainer.appendChild(messageElement);
+
+    messages.forEach((message) => {
+        const messageElement = document.createElement('p');
+        messageElement.textContent = message;
+        messagesContainer.appendChild(messageElement);
+    });
+    
 }
 
 

@@ -2,7 +2,9 @@ import chalk from "chalk"
 import express from "express"
 import http from "http"
 import { WebSocketServer } from "ws"
+import fs from 'fs'
 import os from "os"
+
 
 //Get the Ip address of the machine
 const getLocalIpAddress = () => {
@@ -39,17 +41,33 @@ const wss = new WebSocketServer({server})
 wss.on("connection", (ws)=>{
     console.log("New client just connected")
 
+    
+
 
     ws.on('message', (message)=>{
         console.log(`Recieved message: ${message}`)
 
         const messageString = message.toString();
 
-        wss.clients.forEach((client)=>{
-            if(client.readyState === client.OPEN){
-                client.send(messageString)
+        fs.appendFile(logFilePath, messageString + '\n', (err) => {
+            if (err) {
+                console.error('Error writing message to file:', err);
             }
-        })
+        });
+
+        fs.readFile(logFilePath, 'utf-8', (err, data) => {
+            if (err) {
+                console.error('Error reading messages file:', err);
+                return;
+            }
+            wss.clients.forEach((client)=>{
+                if(client.readyState === client.OPEN){
+                    client.send(data)
+                }
+            })
+        });
+
+        
     })
 
     ws.on("close", ()=>{
